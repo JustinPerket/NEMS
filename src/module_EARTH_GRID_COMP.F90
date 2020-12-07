@@ -3816,6 +3816,22 @@
               file=__FILE__, rcToReturn=rc)
             return  ! bail out
 #endif
+! JP add tmp
+         elseif (trim(model) == "lnd_comp") then
+#ifdef FRONT_NOAH
+            call NUOPC_DriverAddComp(driver, trim(prefix), NOAH_SS, &
+              petList=petList, comp=comp, rc=rc)
+            if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
+              line=__LINE__, file=trim(name)//":"//__FILE__)) return  ! bail out             
+#else
+            write (msg, *) "Model '", trim(model), "' was requested, "// &
+              "but is not available in the executable!"
+            call ESMF_LogSetError(ESMF_RC_NOT_VALID, msg=msg, line=__LINE__, &
+              file=__FILE__, rcToReturn=rc)
+            return  ! bail out                         
+#endif             
+
+! JP end
           elseif (trim(model) == "lis") then
 #ifdef FRONT_LIS
             call NUOPC_DriverAddComp(driver, trim(prefix), LIS_SS, &
