@@ -49,6 +49,12 @@
         Driver_label_SetRunClock      => label_SetRunClock, &
         Driver_label_Finalize         => label_Finalize
       use NUOPC_Connector, only: conSS => SetServices
+
+      ! JP add tmp
+      use lnd_comp_nuopc, only: lndcompSS => SetServices
+      ! JP end
+
+      
   ! - Handle build time ATM options:
 #ifdef FRONT_SATM
       use FRONT_SATM,       only: SATM_SS   => SetServices
@@ -121,7 +127,9 @@
       use FRONT_XLND,       only: XLND_SS  => SetServices
 #endif
 #ifdef FRONT_NOAH
-      use FRONT_NOAH,       only: NOAH_SS  => SetServices
+      ! JP
+      use lnd_comp_nuopc,   only: NOAH_SS => SetServices
+      !use FRONT_NOAH,       only: NOAH_SS  => SetServices
 #endif
 #ifdef FRONT_LIS
       use FRONT_LIS,        only: LIS_SS   => SetServices
@@ -3803,34 +3811,36 @@
               file=__FILE__, rcToReturn=rc)
             return  ! bail out
 #endif
-          elseif (trim(model) == "noah") then
+!          elseif (trim(model) == "noah") then
+! #ifdef FRONT_NOAH
+!             call NUOPC_DriverAddComp(driver, trim(prefix), NOAH_SS, &
+!               petList=petList, comp=comp, rc=rc)
+!             if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
+!               line=__LINE__, file=trim(name)//":"//__FILE__)) return  ! bail out
+! #else
+!             write (msg, *) "Model '", trim(model), "' was requested, "// &
+!               "but is not available in the executable!"
+!             call ESMF_LogSetError(ESMF_RC_NOT_VALID, msg=msg, line=__LINE__, &
+!               file=__FILE__, rcToReturn=rc)
+!             return  ! bail out
+! #endif
+            ! JP add tmp
+            write (*, *) "JP debug 1 in EARTH_GRID_COMP", trim(model)
 #ifdef FRONT_NOAH
-            call NUOPC_DriverAddComp(driver, trim(prefix), NOAH_SS, &
-              petList=petList, comp=comp, rc=rc)
-            if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
-              line=__LINE__, file=trim(name)//":"//__FILE__)) return  ! bail out
-#else
-            write (msg, *) "Model '", trim(model), "' was requested, "// &
-              "but is not available in the executable!"
-            call ESMF_LogSetError(ESMF_RC_NOT_VALID, msg=msg, line=__LINE__, &
-              file=__FILE__, rcToReturn=rc)
-            return  ! bail out
-#endif
-! JP add tmp
          elseif (trim(model) == "lnd_comp") then
-#ifdef FRONT_NOAH
-            call NUOPC_DriverAddComp(driver, trim(prefix), NOAH_SS, &
+            write (*, *) "JP debug in EARTH_GRID_COMP"            
+            call NUOPC_DriverAddComp(driver, trim(prefix), lndcompSS, &
               petList=petList, comp=comp, rc=rc)
             if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
-              line=__LINE__, file=trim(name)//":"//__FILE__)) return  ! bail out             
+                 line=__LINE__, file=trim(name)//":"//__FILE__)) return  ! bail out
 #else
             write (msg, *) "Model '", trim(model), "' was requested, "// &
               "but is not available in the executable!"
             call ESMF_LogSetError(ESMF_RC_NOT_VALID, msg=msg, line=__LINE__, &
               file=__FILE__, rcToReturn=rc)
-            return  ! bail out                         
-#endif             
-
+            return  ! bail out                                                                                                                                                                                                
+#endif
+            
 ! JP end
           elseif (trim(model) == "lis") then
 #ifdef FRONT_LIS

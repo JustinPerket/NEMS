@@ -763,7 +763,9 @@ module module_MEDIATOR
  
     ! Required met forcing fields to LND
     call fld_list_add(fldsToLnd,"inst_down_lw_flx"                      , "cannot provide")
-    call fld_list_add(fldsToLnd,"inst_down_sw_flx"                      , "cannot provide")
+    write(*,*) "JP debug in module_MEDIATOR 4"
+    call fld_list_add(fldsToLnd,"inst_down_sw_flx"                      , "will provide") ! JP changed
+    call fld_list_add(fldsToLnd,"mean_down_lw_flx"                      , "will provide") ! JP add
     call fld_list_add(fldsToLnd,"inst_merid_wind_height_lowest"         , "cannot provide")
     call fld_list_add(fldsToLnd,"inst_pres_height_surface"              , "cannot provide")
     call fld_list_add(fldsToLnd,"inst_spec_humid_height_lowest"         , "cannot provide")
@@ -1327,7 +1329,7 @@ module module_MEDIATOR
       line=__LINE__, file=__FILE__)) return  ! bail out
 
     !--- Importable fields from lnd:
-
+    write(*,*) "JP debug in module_MEDIATOR"
     call realizeConnectedFields(NState_LndImp, &
       fieldNameList=fldsFrLnd%shortname(1:fldsFrLnd%num), &
       string='LndImp',rc=rc)
@@ -1335,7 +1337,7 @@ module module_MEDIATOR
       line=__LINE__, file=__FILE__)) return  ! bail out
 
     !--- Exportable fields to lnd:
-
+    write(*,*) "JP debug in module_MEDIATOR 3"
     call realizeConnectedFields(NState_LndExp, &
       fieldNameList=fldsToLnd%shortname(1:fldsToLnd%num), &
       string='LndExp',rc=rc)
@@ -1388,7 +1390,8 @@ module module_MEDIATOR
         call ESMF_LogWrite(trim(subname)//": called", ESMF_LOGMSG_INFO, rc=dbrc)
       endif
       rc = ESMF_SUCCESS
-      
+
+      write(*,*) "JP debug in module_MEDIATOR 2"
       do n=1, size(fieldNameList)
         if (NUOPC_IsConnected(state, fieldName=fieldNameList(n))) then
 
@@ -1474,7 +1477,7 @@ module module_MEDIATOR
     endif
     
     rc = ESMF_SUCCESS
-
+    write(*,*) "JP debug in module_MEDIATOR 4"
     call realizeConnectedGrid(NState_atmImp, 'AtmImp', rc)
     if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
       line=__LINE__, file=__FILE__)) return  ! bail out
