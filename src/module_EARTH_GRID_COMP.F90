@@ -51,7 +51,7 @@
       use NUOPC_Connector, only: conSS => SetServices
 
       ! JP add tmp
-      use lnd_comp_nuopc, only: lndcompSS => SetServices
+      !use lnd_comp_nuopc, only: lndcompSS => SetServices
       ! JP end
 
       
@@ -128,8 +128,8 @@
 #endif
 #ifdef FRONT_NOAH
       ! JP
-      use lnd_comp_nuopc,   only: NOAH_SS => SetServices
-      !use FRONT_NOAH,       only: NOAH_SS  => SetServices
+      !use lnd_comp_nuopc,   only: NOAH_SS => SetServices
+      use FRONT_NOAH,       only: NOAH_SS  => SetServices
 #endif
 #ifdef FRONT_LIS
       use FRONT_LIS,        only: LIS_SS   => SetServices
